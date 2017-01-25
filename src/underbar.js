@@ -74,48 +74,41 @@
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
     var result = -1;
-
     _.each(array, function(item, index) {
-      if (item === target && result === -1) {
+      if (item === target && result === -1){
         result = index;
       }
     });
-
     return result;
   };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     var pass = [];
-    for (var i = 0 ; i<collection.length ; i++){
-      if (test(collection[i])){
-        pass.push(collection[i]);
+    _.each(collection, function(c){
+      if (test(c) == true) {
+        pass.push(c);
       }
-    }
+    });
     return pass;
   };
-
-  //**********
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    var pass = [];
-    for (var i = 0 ; i<collection.length ; i++){
-      if (!test(collection[i])){
-        pass.push(collection[i]);
-      }
-    }
-    return pass;
+    var reject = _.filter(collection, function(c){
+      return !test(c);
+      });
+    return reject;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var uniq = [];
-    _.each(array, function(element) {
-      if (!uniq.includes(element)) {
-        uniq.push(element);
+    _.each(array, function(e) {
+      if (!uniq.includes(e)) {
+        uniq.push(e);
       }
     });
     return uniq;
@@ -174,18 +167,15 @@
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
     var i=0;
-
     if (accumulator == undefined){
       current = collection[0];
       i++;
     } else {
       var current = accumulator; 
     }
-    
     for (i ; i < collection.length ; i++){
       current = iterator(current, collection[i]);
     }
-
     return current;
   };
 
@@ -193,24 +183,70 @@
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
-    return _.reduce(collection, function(wasFound, item) {
+    var found = _.reduce(collection, function(wasFound, item) {
       if (wasFound) {
         return true;
-      }
+      } 
       return item === target;
     }, false);
+
+    return found;
+
   };
 
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
+   // TIP: Try re-using reduce() here.
+    if (iterator == _.identity || iterator == undefined){
+      
+      var allTrue = _.reduce(collection, function(stillTrue, item) {
+          if (!stillTrue) {
+            return false;
+          }
+          return !!(item);  
+      }, true);
+
+      return allTrue;
+    } 
+    /*
+    else {
+      var allTrue = _.reduce(collection, function(item) {
+        if (!iterator(item)) {
+          return false;
+        } else {
+          return true;
+        }
+      }, true);
+      return allTrue;
+    }
+    */
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    //********
+    if (iterator == _.identity || iterator == undefined){
+      var partTrue = _.reduce(collection, function(stillTrue, item) {
+          if (stillTrue || !!(item)) {
+            return true;
+          }
+          return false;  
+      }, false);
+      return partTrue;
+    } 
+    else {
+      var partTrue = _.reduce(collection, function(item) {
+        if (iterator(item)) {
+          return true;
+        } else return false;
+      }, false);
+      return partTrue;
+    }
+
   };
 
 
@@ -233,11 +269,31 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    var extended = obj;
+    if (arguments.length > 1){
+      for (var i = 1 ; i < arguments.length ; i++){
+        for (var e in arguments[i]){
+          extended[e] = arguments[i][e];
+        }
+      }
+    }
+    return extended;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var extended = obj;
+    if (arguments.length > 1){
+      for (var i = 1 ; i < arguments.length ; i++){
+        for (var e in arguments[i]){
+          if (extended[e] == undefined){
+            extended[e] = arguments[i][e];
+          }
+        }
+      }
+    }
+    return extended;
   };
 
 
