@@ -326,6 +326,7 @@
       // The new function always returns the originally computed result.
       return result;
     };
+
   };
 
   // Memorize an expensive function's results by storing them. You may assume
@@ -337,6 +338,14 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var results = {};
+    var name = func.toString();
+    // if func is not recognized, push function name and result to "results" object. 
+    // else return previously stored results
+    if (results.name == undefined){
+      results.name = func;
+    }
+    return results.name;
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -346,6 +355,13 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var a = [];
+
+    for (var i = 2; i < arguments.length ; i++){
+      a.push(arguments[i]);
+    }
+    
+    return setTimeout(function(){func.apply(this, a);}, wait);
   };
 
 
@@ -360,6 +376,16 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var a = array;
+    var shuffled = [];
+
+    while (a.length > 0){
+      var rand = Math.floor(Math.random() * a.length);
+      shuffled.push(a[rand]);
+      a = a.slice(0,rand).concat(a.slice(rand+1,a.length));
+    }
+
+    return shuffled;
   };
 
 
