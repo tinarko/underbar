@@ -209,18 +209,17 @@
 
       return allTrue;
     } 
-    /*
     else {
-      var allTrue = _.reduce(collection, function(item) {
+      var allTrue = _.reduce(collection, function(current, item) {
         if (!iterator(item)) {
           return false;
         } else {
-          return true;
+          return current;
         }
       }, true);
       return allTrue;
     }
-    */
+    
 
   };
 
@@ -239,10 +238,10 @@
       return partTrue;
     } 
     else {
-      var partTrue = _.reduce(collection, function(item) {
+      var partTrue = _.reduce(collection, function(current, item) {
         if (iterator(item)) {
           return true;
-        } else return false;
+        } else return current;
       }, false);
       return partTrue;
     }
@@ -344,6 +343,7 @@
     // else return previously stored results
     if (results.name == undefined){
       results.name = func;
+      console.log(name);
     }
     return results.name;
   };
