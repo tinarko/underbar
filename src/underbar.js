@@ -338,14 +338,22 @@
   // instead if possible.
   _.memoize = function(func) {
     var results = {};
-    var name = func.toString();
+
     // if func is not recognized, push function name and result to "results" object. 
     // else return previously stored results
-    if (results.name == undefined){
-      results.name = func;
-      console.log(name);
-    }
-    return results.name;
+
+    var result = function() {
+      var a = JSON.stringify(arguments);
+      //console.log(arguments);
+      if (a in results) {
+        return results[a];
+      } else {
+        return results[a] = func.apply(this, arguments);
+      }
+    };
+
+    return result;
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
